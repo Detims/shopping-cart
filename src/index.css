@@ -14,6 +14,11 @@
   scroll-behavior: smooth;
 }
 
+.home {
+  background-image: url(/public/store.png);
+  background-position: center;
+}
+
 a {
   font-weight: 500;
   color: black;
