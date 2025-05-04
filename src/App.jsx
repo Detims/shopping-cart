@@ -5,19 +5,43 @@ import Footer from './components/Footer'
 import Home from './components/Home'
 import Cart from './components/Cart'
 import Details from './components/Details'
+import { useState } from 'react'
 
 function App() {
+  const [cart, setCart] = useState([])
+
+  {/* Check if item type is already in cart and increments it, otherwise adds new item */}
+  const addToCart = (current) => {
+    if (cart.some((item) => current.id === item.id)) {
+      setCart(
+        cart.map((item) =>
+          item.id === current.id
+          ? {...item, quantity: item.quantity + current.quantity}
+          : item
+        )
+      )
+      return
+    }
+
+    setCart((items) => {
+      return [...items, current]
+    })
+  }
+
+  const removeItem = (current) => {
+    setCart(cart.filter((item) => item.id !== current.id))
+  }
 
   return (
     <Router>
       <div className='flex flex-col min-h-screen'>
         <div className='grow'>
-          <Navbar />
+          <Navbar cart={cart} />
           <Routes>
               <Route path='/' element={<main><Home /></main>} />
               <Route path='/shop' element={<main><Shop /></main>} />
-              <Route path='/shop/:id' element={<main><Details /></main>} />
-              <Route path='/cart' element={<main><Cart /></main>} />
+              <Route path='/shop/:id' element={<main><Details addToCart={addToCart} /></main>} />
+              <Route path='/cart' element={<main><Cart cart={cart} removeItem={removeItem} /></main>} />
           </Routes>
         </div>
         <Footer />
